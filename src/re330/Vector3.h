@@ -36,6 +36,16 @@ namespace RE330
     Vector3 operator+(const Vector3& left, const Vector3& right)
     {
       Vector3 result;
+      float resultX = left.getXComp() + left.getXComp();
+      float resultY = left.getYComp() + left.getYComp();
+      float resultZ = left.getZComp() + left.getZComp();
+
+      addVector.x = addVectorX;
+      addVector.y = addVectorY;
+      addVector.z = addVectorZ;
+
+      return addVector;
+
     }
 
     Vector3 subtract(Vector3 v1, Vector3 v2){
