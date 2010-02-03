@@ -20,34 +20,63 @@ namespace RE330
     void setZComp(float z2) { z = z2; }
     void setWComp(float z2) { w = w2; }
 
-    Vector4 operator+(const Vector4& left, const Vector4& right)
+    Vector4 operator+(const Vector4& rhs)
     {
       Vector4 result;
-      float resultX = left.getXComp() + left.getXComp();
-      float resultY = left.getYComp() + left.getYComp();
-      float resultZ = left.getZComp() + left.getZComp();
 
-      result.x = resultX;
-      result.y = resultY;
-      result.z = resultZ;
+      result.x = x + rhs.getXComp();
+      result.y = y + rhs.getYComp();
+      result.z = z + rhs.getZComp();
+      result.w = w + rhs.getWComp();
 
       return result;
 
     }
 
-    Vector4 operator-(const Vector4& left, const Vector4& right)
+    Vector4 operator-(const Vector4& rhs)
     {
       Vector4 result;
-      float resultX = left.getXComp() - left.getXComp();
-      float resultY = left.getYComp() - left.getYComp();
-      float resultZ = left.getZComp() - left.getZComp();
 
-      result.x = resultX;
-      result.y = resultY;
-      result.z = resultZ;
+      result.x = x - rhs.getXComp();
+      result.y = y - rhs.getYComp();
+      result.z = z - rhs.getZComp();
+      result.w = w - rhs.getWComp();
 
       return result;
+    }
 
+    void operator*(float scaleFactor) {
+      x = x * scaleFactor;
+      y = y * scaleFactor;
+      z = z * scaleFactor;
+      w = w * scaleFactor;
+    }
+
+    float dotProduct(Vector4 rhs) {
+      float dotProduct = x*rhs.getXComp() +
+	                 y*rhs.getYComp() +
+	                 z*rhs.getZComp() +
+	                 w*rhs.getWComp();
+      return dotProduct;
+		  
+    }
+
+    float magnitude() {
+      float magnitude = sqrt(pow(x, 2) +
+			     pow(y, 2) + 
+			     pow(z, 2) +
+			     pow(w, 2));
+
+      return magnitude;
+    }
+
+    void normalize() {
+      float magnitude = magnitude();
+      
+      x = x/magnitude;
+      y = y/magnitude;
+      z = z/magnitude;
+      z = w/magnitude;
     }
 
   };
