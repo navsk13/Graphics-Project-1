@@ -19,20 +19,6 @@ namespace RE330
     void setYComp(float y2) { y = y2; }
     void setZComp(float z2) { z = z2; }
 
-    Vector3 add(Vector3 v1, Vector3 v2){
-      Vector3 addVector;
-
-      float addVectorX = v1.getXComp() + v2.getXComp();
-      float addVectorY = v1.getYComp() + v2.getYComp();
-      float addVectorZ = v1.getZComp() + v2.getZComp();
-
-      addVector.x = addVectorX;
-      addVector.y = addVectorY;
-      addVector.z = addVectorZ;
-
-      return addVector;
-    }
-
     Vector3 operator+(const Vector3& left, const Vector3& right)
     {
       Vector3 result;
@@ -40,30 +26,29 @@ namespace RE330
       float resultY = left.getYComp() + left.getYComp();
       float resultZ = left.getZComp() + left.getZComp();
 
-      addVector.x = addVectorX;
-      addVector.y = addVectorY;
-      addVector.z = addVectorZ;
+      result.x = resultX;
+      result.y = resultY;
+      result.z = resultZ;
 
-      return addVector;
+      return result;
 
     }
 
-    Vector3 subtract(Vector3 v1, Vector3 v2){
-      Vector3 subtractVector;
+    Vector3 operator-(const Vector3& left, const Vector3& right)
+    {
+      Vector3 result;
+      float resultX = left.getXComp() - left.getXComp();
+      float resultY = left.getYComp() - left.getYComp();
+      float resultZ = left.getZComp() - left.getZComp();
 
-      float subtractVectorX = v1.getXComp() - v2.getXComp();
-      float subtractVectorY = v1.getYComp() - v2.getYComp();
-      float subtractVectorZ = v1.getZComp() - v2.getZComp();
+      result.x = resultX;
+      result.y = resultY;
+      result.z = resultZ;
 
-      subtractVector.x = subtractVectorX;
-      subtractVector.y = subtractVectorY;
-      subtractVector.z = subtractVectorZ;
+      return result;
 
-      return subtractVector;
     }
-
   };
-
 }
 
 #endif
