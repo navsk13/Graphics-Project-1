@@ -19,83 +19,78 @@ namespace RE330
     void setYComp(float y2) { y = y2; }
     void setZComp(float z2) { z = z2; }
 
-    Vector3 operator+(const Vector3& left, const Vector3& right)
+    Vector3 operator+(Vector3& right)
     {
       Vector3 result;
-      float resultX = left.getXComp() + left.getXComp();
-      float resultY = left.getYComp() + left.getYComp();
-      float resultZ = left.getZComp() + left.getZComp();
 
-      result.x = resultX;
-      result.y = resultY;
-      result.z = resultZ;
+      result.x = x + right.getXComp();
+      result.y = y + right.getYComp();
+      result.z = z + right.getZComp();
 
       return result;
 
     }
 
-    Vector3 operator-(const Vector3& left, const Vector3& right)
+    Vector3 operator-(Vector3& right)
     {
       Vector3 result;
-      float resultX = left.getXComp() - left.getXComp();
-      float resultY = left.getYComp() - left.getYComp();
-      float resultZ = left.getZComp() - left.getZComp();
 
-      result.x = resultX;
-      result.y = resultY;
-      result.z = resultZ;
+      result.x =  x - right.getXComp();
+      result.y = y - right.getYComp();
+      result.z = z - right.getZComp();
 
       return result;
 
     }
 
-    float dotProduct(Vector3 v1, Vector3 v2) {
+    void operator*(float scalarFactor)
+    {
+      x = x * scalarFactor;
+      y = y * scalarFactor;
+      z = z * scalarFactor;
+    }
 
-      float dotProduct = v1.getXComp()*v2.getXComp() +
-	                 v1.getYComp()*v2.getYComp() +
-	                 v1.getZComp()*v2.getZComp();
+    float dotProduct(Vector3& rhs) {
+
+      float dotProduct = x*rhs.getXComp() +
+	                 y*rhs.getYComp() +
+	                 z*rhs.getZComp();
       return dotProduct;
 		  
     }
 
-    Vector3 crossProduct(Vector v1, Vector3 v2) {
-      Vector 3 crossProductVector;
-		  
-      float crossProductX = v1.getYComp()*v2.getZComp() -
-	                    v1.getZComp()*v2.getYComp();
-      float crossProductY = v1.getZComp()*v2.getXComp() -
-	                    v1.getXComp()*v2.getZComp();
-      float crossProductZ = v1.getXComp()*v2.getYComp() -
-	                    v1.getYComp()*v2.getXComp();
+    Vector3 crossProduct(Vector3& rhs) {
+      Vector3 crossProductVector;
 
-      crossProductVector.x = crossProductX;
-      crossProductVector.y = crossProductY;
-      crossProductVector.z = crossProductZ;
+      crossProductVector.x = y*rhs.getZComp() -
+	                    z*rhs.getYComp();; 
+      crossProductVector.y = z*rhs.getXComp() -
+	                    x*rhs.getZComp();;
+      crossProductVector.z =  x*rhs.getYComp() -
+	                    y*rhs.getXComp();;
 
       return crossProductVector;
     }
 
-    float magnitude(Vector v) {
-      float magnitude = sqrt((v.getXComp())^2 +
-			     (v.getYComp())^2 +
-			     (v.getZComp())^2);
+    float magnitude() {
+      float magnitude = sqrt( pow(x, 2) +
+			      pow(y, 2) +
+			      pow(z, 2) );
       return magnitude;
     }
 
-    Vector normalize(Vector v) {
-      float magnitude = magnitude(v);
+    void normalize() {
+      float magnitude = this.magnitude();
       
-      float normalX = v.getXComp()/magnitude;
-      float normalY = v.getYComp()/magnitude;
-      float normalZ = v.getZComp()/magnitude;
+      float normalX = x/magnitude;
+      float normalY = y/magnitude;
+      float normalZ = z/magnitude;
 
-      v.x = normalX;
-      v.y = normalY;
-      v.z = normalZ;
+      x = normalX;
+      y = normalY;
+      z = normalZ;
 
-      return v;
-      
-
+    }
   };
 }
 
