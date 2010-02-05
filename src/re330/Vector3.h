@@ -1,97 +1,92 @@
 #ifndef __Vector3_h__
 #define __Vector3_h__
 
-#include "RE330_global.h"
 #include <math.h>
+#include "RE330_global.h"
 
 namespace RE330
 {
-  class RE330_EXPORT Vector3
-  {
-  private:
-    float x, y, z;
-  public:
-    float getXComp() { return x; }
-    float getYComp() { return y; }
-    float getZComp() { return z; }
-
-    void setXComp(float x2) { x = x2; }
-    void setYComp(float y2) { y = y2; }
-    void setZComp(float z2) { z = z2; }
-
-    Vector3 operator+(Vector3& right)
+//#include <math.h> using namespace std;
+    class RE330_EXPORT Vector3
     {
-      Vector3 result;
+    private:
+        float x, y, z;
+    public:
+        float getXComp() { return x; }
+        float getYComp() { return y; }
+        float getZComp() { return z; }
 
-      result.x = x + right.getXComp();
-      result.y = y + right.getYComp();
-      result.z = z + right.getZComp();
+        void setXComp(float x2) { x = x2; }
+        void setYComp(float y2) { y = y2; }
+        void setZComp(float z2) { z = z2; }
 
-      return result;
+        Vector3 operator+(Vector3& right)
+        {
+            Vector3 result;
 
-    }
+            result.x = x + right.getXComp();
+            result.y = y + right.getYComp();
+            result.z = z + right.getZComp();
 
-    Vector3 operator-(Vector3& right)
-    {
-      Vector3 result;
+            return result;
 
-      result.x =  x - right.getXComp();
-      result.y = y - right.getYComp();
-      result.z = z - right.getZComp();
+        }
 
-      return result;
+        Vector3 operator-(Vector3& right)
+        {
+            Vector3 result;
 
-    }
+            result.x =  x - right.getXComp();
+            result.y = y - right.getYComp();
+            result.z = z - right.getZComp();
 
-    void operator*(float scalarFactor)
-    {
-      x = x * scalarFactor;
-      y = y * scalarFactor;
-      z = z * scalarFactor;
-    }
+            return result;
 
-    float dotProduct(Vector3& rhs) {
+        }
 
-      float dotProduct = x*rhs.getXComp() +
-	                 y*rhs.getYComp() +
-	                 z*rhs.getZComp();
-      return dotProduct;
-		  
-    }
+        void operator*(float scalarFactor)
+        {
+            x = x * scalarFactor;
+            y = y * scalarFactor;
+            z = z * scalarFactor;
+        }
 
-    Vector3 crossProduct(Vector3& rhs) {
-      Vector3 crossProductVector;
+        float dotProduct(Vector3& rhs) {
 
-      crossProductVector.x = y*rhs.getZComp() -
-	                    z*rhs.getYComp();; 
-      crossProductVector.y = z*rhs.getXComp() -
-	                    x*rhs.getZComp();;
-      crossProductVector.z =  x*rhs.getYComp() -
-	                    y*rhs.getXComp();;
+            float dotProduct = x*rhs.getXComp() +
+                y*rhs.getYComp() +
+                z*rhs.getZComp();
+            return dotProduct;
 
-      return crossProductVector;
-    }
+        }
 
-    float magnitude() {
-      float magnitude = sqrt( pow(x, 2) +
-			      pow(y, 2) +
-			      pow(z, 2) );
-      return magnitude;
-    }
+        Vector3 crossProduct(Vector3& rhs) {
+            Vector3 crossProductVector;
 
-    void normalize() {
-      float magnitude = this.magnitude();
-      
-      float normalX = x/magnitude;
-      float normalY = y/magnitude;
-      float normalZ = z/magnitude;
+            crossProductVector.x = y*rhs.getZComp() -
+                z*rhs.getYComp();;
+            crossProductVector.y = z*rhs.getXComp() -
+                x*rhs.getZComp();;
+            crossProductVector.z =  x*rhs.getYComp() -
+                y*rhs.getXComp();;
 
-      x = normalX;
-      y = normalY;
-      z = normalZ;
+            return crossProductVector;
+        }
 
-    }
-  };
+        float magnitude() {
+            float magnitude = sqrt( pow(x, 2) +
+                                    pow(y, 2) +
+                                    pow(z, 2) );
+            return magnitude;
+        }
+
+        void normalize(float magnitude) {
+            x = x/magnitude;
+            y = y/magnitude;
+            z = z/magnitude;
+
+        }
+    };
 }
 
 #endif
