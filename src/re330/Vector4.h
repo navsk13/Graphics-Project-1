@@ -11,58 +11,58 @@ namespace RE330
     private:
         float x, y, z, w;
     public:
-        float getXComp() { return x; }
-        float getYComp() { return y; }
-        float getZComp() { return z; }
-        float getWComp() { return w; }
+        float getX() { return x; }
+        float getY() { return y; }
+        float getZ() { return z; }
+        float getW() { return w; }
 
-        void setXComp(float x2) { x = x2; }
-        void setYComp(float y2) { y = y2; }
-        void setZComp(float z2) { z = z2; }
-        void setWComp(float w2) { w = w2; }
+        void setX(float x2) { x = x2; }
+        void setY(float y2) { y = y2; }
+        void setZ(float z2) { z = z2; }
+        void setW(float w2) { w = w2; }
 
-        Vector4 operator+(Vector4& rhs)
+        inline Vector4 operator+(Vector4& rhs)
         {
             Vector4 result;
 
-            result.x = x + rhs.getXComp();
-            result.y = y + rhs.getYComp();
-            result.z = z + rhs.getZComp();
-            result.w = w + rhs.getWComp();
+            result.x = x + rhs.getX();
+            result.y = y + rhs.getY();
+            result.z = z + rhs.getZ();
+            result.w = w + rhs.getW();
 
             return result;
 
         }
 
-        Vector4 operator-(Vector4& rhs)
+        inline Vector4 operator-(Vector4& rhs)
         {
             Vector4 result;
 
-            result.x = x - rhs.getXComp();
-            result.y = y - rhs.getYComp();
-            result.z = z - rhs.getZComp();
-            result.w = w - rhs.getWComp();
+            result.x = x - rhs.getX();
+            result.y = y - rhs.getY();
+            result.z = z - rhs.getZ();
+            result.w = w - rhs.getW();
 
             return result;
         }
 
-        void operator*(float scaleFactor) {
+        inline void operator*(float scaleFactor) {
             x = x * scaleFactor;
             y = y * scaleFactor;
             z = z * scaleFactor;
             w = w * scaleFactor;
         }
 
-        float dotProduct(Vector4 rhs) {
-            float dotProduct = x*rhs.getXComp() +
-                y*rhs.getYComp() +
-                z*rhs.getZComp() +
-                w*rhs.getWComp();
+        inline float dotProduct(Vector4 rhs) {
+            float dotProduct = x*rhs.getX() +
+                y*rhs.getY() +
+                z*rhs.getZ() +
+                w*rhs.getW();
             return dotProduct;
 
         }
 
-        float magnitude() {
+        inline float magnitude() {
             float magnitude = sqrt(pow(x, 2) +
                                    pow(y, 2) +
                                    pow(z, 2) +
@@ -71,7 +71,7 @@ namespace RE330
             return magnitude;
         }
 
-        void normalize(float magnitude) {
+        inline void normalize(float magnitude) {
             x = x/magnitude;
             y = y/magnitude;
             z = z/magnitude;
