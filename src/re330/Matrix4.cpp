@@ -8,4 +8,3 @@ const Matrix4 Matrix4::IDENTITY(
         0, 1, 0, 0,
         0, 0, 1, 0,
         0, 0, 0, 1 );
-
