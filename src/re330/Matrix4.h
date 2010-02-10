@@ -204,7 +204,8 @@ namespace RE330
             return r;
         }
 
-        inline Matrix4 rotateAxis(char axis, float angle)
+        inline Matrix4 rotateAxis(char axis,
+                                  float angle)
         {
             Matrix4 result(IDENTITY);
             float cosAngle = cos(angle);
@@ -240,7 +241,8 @@ namespace RE330
             return result;
         }
 
-        inline Matrix4 rotateArbitrary(Vector4 vector, float angle)
+        inline Matrix4 rotateArbitrary(Vector4 vector,
+                                       float angle)
         {
             Matrix4 result(IDENTITY);
 
@@ -252,7 +254,7 @@ namespace RE330
             float sinA = sin(angle);
 
             float x2 = pow(x, 2);
-            result.m[0][0] = x2 + cosA* (1 - x2);
+            result.m[0][0] = x2 + cosA * (1 - x2);
             result.m[0][1] = x * y * (1 - cosA) - z * sinA;
             result.m[0][2] = x * z * (1 - cosA) + y * sinA;
 
@@ -268,6 +270,23 @@ namespace RE330
 
             return result;
         }
+
+        inline Matrix4 scale(float x,
+                             float y,
+                             float z)
+        {
+            Matrix4 result(IDENTITY);
+            return result;
+        }
+
+        inline Matrix4 translate(float x,
+                                 float y,
+                                 float z)
+        {
+            Matrix4 result(IDENTITY);
+            return result;
+        }
+
 
         inline float* getElementPointer()
         {

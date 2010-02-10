@@ -54,10 +54,10 @@ namespace RE330
         }
 
         inline float dotProduct(Vector4 rhs) {
-            float dotProduct = x*rhs.getX() +
-                y*rhs.getY() +
-                z*rhs.getZ() +
-                w*rhs.getW();
+            float dotProduct = (x*rhs.getX() +
+                                y*rhs.getY() +
+                                z*rhs.getZ() +
+                                w*rhs.getW());
             return dotProduct;
 
         }

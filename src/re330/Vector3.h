@@ -36,7 +36,7 @@ namespace RE330
         {
             Vector3 result;
 
-            result.x =  x - right.getX();
+            result.x = x - right.getX();
             result.y = y - right.getY();
             result.z = z - right.getZ();
 
