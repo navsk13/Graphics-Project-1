@@ -276,6 +276,11 @@ namespace RE330
                              float z)
         {
             Matrix4 result(IDENTITY);
+
+	    result.m[0][0] = x;
+	    result.m[1][1] = y;
+	    result.m[2][2] = z;
+
             return result;
         }
 
@@ -284,6 +289,11 @@ namespace RE330
                                  float z)
         {
             Matrix4 result(IDENTITY);
+
+	    result.m[0][3] = x;
+	    result.m[1][3] = y;
+	    result.m[2][3] = z;
+
             return result;
         }
 
