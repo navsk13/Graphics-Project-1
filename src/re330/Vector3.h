@@ -12,6 +12,14 @@ namespace RE330
     private:
         float x, y, z;
     public:
+        inline Vector3() {}
+
+        inline Vector3(float xParam, float yParam, float zParam)
+        {
+            x = xParam;
+            y = yParam;
+            z = zParam;
+        }
         float getX() { return x; }
         float getY() { return y; }
         float getZ() { return z; }
@@ -44,18 +52,22 @@ namespace RE330
 
         }
 
-        inline void operator*(float scalarFactor)
+        inline Vector3 operator*(float scalarFactor)
         {
-            x = x * scalarFactor;
-            y = y * scalarFactor;
-            z = z * scalarFactor;
+            Vector3 result;
+
+            result.x = x * scalarFactor;
+            result.y = y * scalarFactor;
+            result.z = z * scalarFactor;
+
+            return result;
         }
 
         inline float dotProduct(Vector3& rhs) {
 
-            float dotProduct = x*rhs.getX() +
-                y*rhs.getY() +
-                z*rhs.getZ();
+            float dotProduct = ( x*rhs.getX() +
+                                 y*rhs.getY() +
+                                 z*rhs.getZ() );
             return dotProduct;
 
         }
@@ -63,12 +75,14 @@ namespace RE330
         inline Vector3 crossProduct(Vector3& rhs) {
             Vector3 crossProductVector;
 
-            crossProductVector.x = y*rhs.getZ() -
-                z*rhs.getY();;
-            crossProductVector.y = z*rhs.getX() -
-                x*rhs.getZ();;
-            crossProductVector.z =  x*rhs.getY() -
-                y*rhs.getX();;
+            crossProductVector.x = ( y*rhs.getZ() -
+                                     z*rhs.getY() );
+
+            crossProductVector.y = ( z*rhs.getX() -
+                                     x*rhs.getZ() );
+
+            crossProductVector.z = ( x*rhs.getY() -
+                                     y*rhs.getX() );
 
             return crossProductVector;
         }

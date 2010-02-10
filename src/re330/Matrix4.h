@@ -22,9 +22,7 @@ namespace RE330
     public:
         static const Matrix4 IDENTITY;
 
-        inline Matrix4()
-        {
-        }
+        inline Matrix4() {}
 
         inline Matrix4(
             float m00, float m01, float m02, float m03,
@@ -277,9 +275,9 @@ namespace RE330
         {
             Matrix4 result(IDENTITY);
 
-	    result.m[0][0] = x;
-	    result.m[1][1] = y;
-	    result.m[2][2] = z;
+            result.m[0][0] = x;
+            result.m[1][1] = y;
+            result.m[2][2] = z;
 
             return result;
         }
@@ -290,9 +288,9 @@ namespace RE330
         {
             Matrix4 result(IDENTITY);
 
-	    result.m[0][3] = x;
-	    result.m[1][3] = y;
-	    result.m[2][3] = z;
+            result.m[0][3] = x;
+            result.m[1][3] = y;
+            result.m[2][3] = z;
 
             return result;
         }
