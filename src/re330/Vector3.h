@@ -20,6 +20,7 @@ namespace RE330
             y = yParam;
             z = zParam;
         }
+
         float getX() { return x; }
         float getY() { return y; }
         float getZ() { return z; }
@@ -63,7 +64,8 @@ namespace RE330
             return result;
         }
 
-        inline float dotProduct(Vector3& rhs) {
+        inline float dotProduct(Vector3& rhs)
+        {
 
             float dotProduct = ( x*rhs.getX() +
                                  y*rhs.getY() +
@@ -72,7 +74,8 @@ namespace RE330
 
         }
 
-        inline Vector3 crossProduct(Vector3& rhs) {
+        inline Vector3 crossProduct(Vector3& rhs)
+        {
             Vector3 crossProductVector;
 
             crossProductVector.x = ( y*rhs.getZ() -
@@ -87,19 +90,34 @@ namespace RE330
             return crossProductVector;
         }
 
-        inline float magnitude() {
+        inline float magnitude()
+        {
             float magnitude = sqrt( pow(x, 2) +
                                     pow(y, 2) +
                                     pow(z, 2) );
             return magnitude;
         }
 
-        inline void normalize(float magnitude) {
+        inline void normalize(float magnitude)
+        {
             x = x/magnitude;
             y = y/magnitude;
             z = z/magnitude;
 
         }
+
+        inline bool equals(Vector3 &rhs)
+        {
+            if ( x == rhs.getX() and
+                 y == rhs.getY() and
+                 z == rhs.getZ() )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
     };
 }
 

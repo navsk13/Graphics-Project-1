@@ -300,6 +300,24 @@ namespace RE330
         {
             return static_cast<float *>(_m);
         }
+
+        inline bool equals(Matrix4 &rhs)
+        {
+
+            for (int row = 0; row < 4; row++)
+            {
+                for (int col = 0; col < 4; col++)
+                {
+                    if (m[row][col] != rhs.m[row][col])
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
     };
 
 }
