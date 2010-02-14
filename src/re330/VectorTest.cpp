@@ -17,14 +17,15 @@ VectorTestSuite::~VectorTestSuite()
 
 int VectorTestSuite::main()
 {
-    testAdd();
-    testSub();
-    testMult();
-    testDot();
+    testAdd3();
+    testSub3();
+    testMult3();
+    testDot3();
+    testMag3();
     return 1;
 }
 
-void VectorTestSuite::testAdd()
+void VectorTestSuite::testAdd3()
 {
     float value = 1;
     Vector3 v3_1 = Vector3(value, value, value);
@@ -43,7 +44,7 @@ void VectorTestSuite::testAdd()
     }
 }
 
-void VectorTestSuite::testSub()
+void VectorTestSuite::testSub3()
 {
     float value = 1;
     Vector3 v3_1 = Vector3(value, value, value);
@@ -62,7 +63,7 @@ void VectorTestSuite::testSub()
     }
 }
 
-void VectorTestSuite::testMult()
+void VectorTestSuite::testMult3()
 {
     float value = 1;
     float scalar = 2;
@@ -81,7 +82,7 @@ void VectorTestSuite::testMult()
     }
 }
 
-void VectorTestSuite::testDot()
+void VectorTestSuite::testDot3()
 {
     float value = 1;
     Vector3 v3_1 = Vector3(value, value, value);
@@ -98,7 +99,7 @@ void VectorTestSuite::testDot()
     }
 }
 
-void VectorTestSuite::testCross()
+void VectorTestSuite::testCross3()
 {
     float value = 1;
     Vector3 v3_1 = Vector3(value, value, value);
@@ -115,13 +116,13 @@ void VectorTestSuite::testCross()
     }
 }
 
-void VectorTestSuite::testMag()
+void VectorTestSuite::testMag3()
 {
-    float value = 1;
-    Vector3 v3_1 = Vector3(value, value, value);
+    float value = 2;
+    Vector3 v3_1 = BVector3(value, value, value);
     float temp = v3_1.magnitude();
 
-    if (temp != (3 * pow(value, 2)) )
+    if ( temp != (sqrt(3 * pow(value, 2))) )
     {
         cout << "vector3 magnitude failed" << endl;
     }
@@ -131,7 +132,7 @@ void VectorTestSuite::testMag()
     }
 }
 
-void VectorTestSuite::testNorm()
+void VectorTestSuite::testNorm3()
 {
     float value = 1;
     Vector3 v3_1 = Vector3(value, value, value);
