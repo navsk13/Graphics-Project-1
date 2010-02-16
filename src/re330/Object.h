@@ -5,7 +5,7 @@
 #include "VertexData.h"
 #include "Matrix4.h"
 
-namespace RE330 
+namespace RE330
 {
 	/** This class provides an abstraction of scene objects.
 	@remarks

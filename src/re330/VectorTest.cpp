@@ -119,7 +119,7 @@ void VectorTestSuite::testCross3()
 void VectorTestSuite::testMag3()
 {
     float value = 2;
-    Vector3 v3_1 = BVector3(value, value, value);
+    Vector3 v3_1 = Vector3(value, value, value);
     float temp = v3_1.magnitude();
 
     if ( temp != (sqrt(3 * pow(value, 2))) )

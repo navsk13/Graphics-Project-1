@@ -42,8 +42,10 @@ protected:
 private:
 	SceneManager *sceneManager;
 	Camera *camera;
-	Object *object;
+	Object *sphere;
 	int timerId;
+
+    void createSphere(SceneManager *sm);
 };
 
 #endif // BASICAPP_H
