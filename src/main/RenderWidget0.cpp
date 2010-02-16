@@ -29,10 +29,8 @@ void RenderWidget0::initSceneEvent()
     // Camera
     camera = sceneManager->createCamera();
 
-    //create3DShape(int type, int depth)
-
-    //Add the object
-    createSphere(sceneManager);
+    Shape3D cubeShape = createCube();
+    cube = drawShape(cubeShape);
 
     // Trigger timer event every 5ms.
     timerId = startTimer(5);
@@ -84,38 +82,19 @@ void RenderWidget0::stopAnimation()
     }
 }
 
-void RenderWidget0::createSphere(SceneManager *sm)
+&Shape3D RenderWidget0::createSphere(int depth)
 {
-    // Add an object to the scene
-    sphere = sm->createObject();
-
-   // Set up the vertex data
-    VertexData& vertexData = sphere->vertexData;
-
-    // Specify the elements of the vertex data:
-    // - one element for vertex positions
-    vertexData.vertexDeclaration.addElement(
-        0, 0, 3, 3*sizeof(float), RE330::VES_POSITION);
-    // - one element for vertex colors
-    vertexData.vertexDeclaration.addElement(
-        1, 0, 3, 3*sizeof(int), RE330::VES_DIFFUSE);
-
-
     int nVerts = 24;
     float vertices[] = {
         -1,0, 1,  1,0,1,  0,1,0,       //top front face
         -1,0,-1, -1,0,1, 0,1,0,    //top left face
-         1,0,-1, -1,0,-1, 0,1,0,    //top back face
+        1,0,-1, -1,0,-1, 0,1,0,    //top back face
         1,0,1, 1,0,-1, 0,1,0,      //top right face
         -1,0,1, 0,-1,0, 1,0,1,     //bottom front face
         -1,0,-1, 0,-1,0, -1,0,1,    //bottom left face
         1,0,-1, 0,-1,0, -1,0,-1,    //bottom back face
         1,0,1, 0,-1,0, 1,0,-1      //bottom right face
     };
-
-    // Create the buffers and load the data
-    vertexData.createVertexBuffer(
-        0, nVerts*3*sizeof(float), (unsigned char*)vertices);
 
     float colors[] = {
         1,0,0, 1,0,0, 1,0,0,
@@ -128,9 +107,6 @@ void RenderWidget0::createSphere(SceneManager *sm)
         1,0,1, 1,0,1, 1,0,1
     };
 
-    vertexData.createVertexBuffer(
-        1, nVerts*3*sizeof(float), (unsigned char*)colors);
-
     // The index data that stores the connectivity of the triangles
     int indices[] = {
         0,1,2,		// top front face
@@ -142,17 +118,36 @@ void RenderWidget0::createSphere(SceneManager *sm)
         18,19,20,       // bottom back face
         21,22,23     // bottom right face
     };
-    vertexData.createIndexBuffer(24, indices);
-
+    return new Shape3D(nVerts, vertices, colors, indices);
 }
 
-void RenderWidget0::createSphere(SceneManager *sm)
+&Shape3D RenderWidget0::createCube()
 {
-    // Add an object to the scene
-    sphere = sm->createObject();
+    // A cube
+    int nVerts = 8;
+    float vertices[] = {-1,-1,1, 1,-1,1, 1,1,1, -1,1,1,
+                        -1,1,-1, 1,1,-1, 1,-1,-1, -1,-1,-1};
 
-   // Set up the vertex data
-    VertexData& vertexData = sphere->vertexData;
+    float colors[] = {1,0,0, 0,1,0, 0,0,1, 1,1,0,
+                      0,1,1, 1,0,1, 1,1,1, 0.5,0.5,0.5};
+
+    // The index data that stores the connectivity of the triangles
+    int indices[] = {0,2,3, 0,1,2,    // front face
+                     7,3,4, 7,0,3,    // left face
+                     6,4,5, 6,7,4,    // back face
+                     1,5,2, 1,6,5,    // right face
+                     2,4,3, 2,5,4,    // top face
+                     0,6,1, 0,7,6};   // bottom face
+
+    return new Shape3D(nVerts, vertices, colors, indices);
+}
+
+Object& drawShape(Shape3D s)
+{
+    new Object temp;
+    temp = sceneManager->createObject();
+    // Set up the vertex data
+    VertexData& vertexData = o->vertexData;
 
     // Specify the elements of the vertex data:
     // - one element for vertex positions
@@ -164,9 +159,14 @@ void RenderWidget0::createSphere(SceneManager *sm)
 
     // Create the buffers and load the data
     vertexData.createVertexBuffer(
-        0, nVerts*3*sizeof(float), (unsigned char*)vertices);
-    vertexData.createVertexBuffer(
-        1, nVerts*3*sizeof(float), (unsigned char*)colors);
-    vertexData.createIndexBuffer(24, indices);
+        0, nVerts*3*sizeof(float), (unsigned char*)s.getVertices());
 
+    vertexData.createVertexBuffer(
+        1, nVerts*3*sizeof(float), (unsigned char*)s.getColors());
+    float[] indices (s.getIndices());
+
+    vertexData.createIndexBuffer(sizeof indices / sizeof indices[0],
+                                 indices());
+
+    return &temp;
 }

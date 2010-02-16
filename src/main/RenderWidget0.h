@@ -6,6 +6,7 @@
 #include "GLRenderWidget.h"
 #include "SceneManager.h"
 #include "Object.h"
+#include "Shape3D.h"
 
 using namespace RE330;
 
@@ -42,10 +43,13 @@ protected:
 private:
 	SceneManager *sceneManager;
 	Camera *camera;
+	Object *cube;
 	Object *sphere;
 	int timerId;
 
-    void createSphere(SceneManager *sm);
+    Shape3D& createSphere(int depth);
+    Shape3D& createCube();
+    Object& drawShape(Shape3D s);
 };
 
 #endif // BASICAPP_H
