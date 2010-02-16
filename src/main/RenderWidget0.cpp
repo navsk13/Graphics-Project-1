@@ -28,26 +28,32 @@ void RenderWidget0::initSceneEvent()
 
 	// Camera
 	camera = sceneManager->createCamera();
-
-	// A cube
+	
+	// A sphere
 	int nVerts = 24;
-	float vertices[] = {-1,-1,1, 1,-1,1, 1,1,1, -1,1,1,		// front face
-		                -1,-1,-1, -1,-1,1, -1,1,1, -1,1,-1, // left face
-						1,-1,-1,-1,-1,-1, -1,1,-1, 1,1,-1,  // back face
-						1,-1,1, 1,-1,-1, 1,1,-1, 1,1,1,		// right face
-						1,1,1, 1,1,-1, -1,1,-1, -1,1,1,		// top face
-						-1,-1,1, -1,-1,-1, 1,-1,-1, 1,-1,1};// bottom face
+	float vertices[] = {-1,0,1, 1,0,1, 0,1,0,       //top front face
+			    -1,0,-1, -1,0,1, 0,1,0,    //top left face
+			    1,0,-1, -1,0,-1, 0,1,0,    //top back face
+			    1,0,1, 1,0,-1, 0,1,0,      //top right face
+			    -1,0,1, 0,-1,0, 1,0,1,     //bottom front face
+			    -1,0,-1, 0,-1,0, -1,0,1,    //bottom left face
+			    1,0,-1, 0,-1,0, -1,0,-1,    //bottom back face
+			    1,0,1, 0,-1,0, 1,0,-1};    //bottom right face
+			    
+	
 
-	float colors[] = {1,0,0, 1,0,0, 1,0,0, 1,0,0,
-					  0,1,0, 0,1,0, 0,1,0, 0,1,0,
-					  1,0,0, 1,0,0, 1,0,0, 1,0,0,
-					  0,1,0, 0,1,0, 0,1,0, 0,1,0,
-					  0,0,1, 0,0,1, 0,0,1, 0,0,1,
-					  0,0,1, 0,0,1, 0,0,1, 0,0,1};
+	float colors[] = {1,0,0, 1,0,0, 1,0,0,
+			  0,1,0, 0,1,0, 0,1,0, 
+			  1,0,0, 1,0,0, 1,0,0, 
+			  0,1,0, 0,1,0, 0,1,0, 
+			  0,0,1, 0,0,1, 0,0,1,
+			  1,0,1, 1,0,1, 1,0,1,
+			  0,0,1, 0,0,1, 0,0,1,
+			  1,0,1, 1,0,1, 1,0,1};
 
 	// Add an object to the scene
 	object = sceneManager->createObject();
-
+ 
 	// Set up the vertex data
 	VertexData& vertexData = object->vertexData;
 
@@ -62,13 +68,18 @@ void RenderWidget0::initSceneEvent()
 	vertexData.createVertexBuffer(1, nVerts*3*sizeof(float), (unsigned char*)colors);
 
 	// The index data that stores the connectivity of the triangles
-	int indices[] = {0,2,3, 0,1,2,			// front face
-		             4,6,7, 4,5,6,			// left face
-					 8,10,11, 8,9,10,		// back face
-					 12,14,15, 12,13,14,	// right face
-					 16,18,19, 16,17,18,	// top face
-					 20,22,23, 20,21,22};	// bottom face
-	vertexData.createIndexBuffer(36, indices);
+	int indices[] = {0,1,2,		// top front face
+			 3,4,5,		// top left face
+			 6,7,8,	        // top back face
+			 9,10,11,       // top right face
+			 12,13,14,	// bottom front face
+			 15,16,17,	// bottom left face
+			 18,19,20,       // bottom back face
+			 21,22,23};     // bottom right face
+	vertexData.createIndexBuffer(24, indices);
+
+	
+
 
 	// Trigger timer event every 5ms.
 	timerId = startTimer(5);
