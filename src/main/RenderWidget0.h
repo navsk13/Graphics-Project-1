@@ -2,6 +2,7 @@
 #define RenderWidget0_H
 
 #include <QWidget>
+#include <vector>
 #include "GLRenderWidget.h"
 #include "GLRenderWidget.h"
 #include "SceneManager.h"
@@ -44,6 +45,9 @@ private:
 	SceneManager *sceneManager;
 	Camera *camera;
 	Object *cube;
+    Shape3D *cubeShape;
+    Object * sphere;
+    Shape3D * sphereShape;
 	int timerId;
 
     Shape3D * createSphere(int depth);
