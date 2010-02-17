@@ -16,6 +16,7 @@ INCLUDEPATH += . src/main src/re330
 HEADERS += src/main/MainWidget.h \
            src/main/MainWindow.h \
            src/main/RenderWidget0.h \
+           src/main/Shape3D.h \
            src/re330/BasicMath.h \
            src/re330/Camera.h \
            src/re330/Frustum.h \

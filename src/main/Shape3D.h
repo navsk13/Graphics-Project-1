@@ -12,14 +12,15 @@ public:
         {
         }
 
-    inline const int getNumVerts() { return numVerts; }
-    inline const float* getVertices() { return vertices; }
-    inline const float* getColors() { return colors; }
-    inline const int* getIndices() { return indices; }
+    inline int getNumVerts() { return numVerts; }
+    inline float * getVertices() { return vertices; }
+    inline float * getColors() { return colors; }
+    inline int * getIndices() { return indices; }
 
 private:
-    const int numVerts;
-    const float* vertices;
-    const float* colors;
-    const int* indices;
-};
+    int numVerts;
+    float * vertices;
+    float * colors;
+    int * indices;
+
+ };

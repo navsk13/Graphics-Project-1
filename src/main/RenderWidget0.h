@@ -44,12 +44,11 @@ private:
 	SceneManager *sceneManager;
 	Camera *camera;
 	Object *cube;
-	Object *sphere;
 	int timerId;
 
-    Shape3D& createSphere(int depth);
-    Shape3D& createCube();
-    Object& drawShape(Shape3D s);
+    Shape3D * createSphere(int depth);
+    Shape3D * createCube();
+    Object  * drawShape(Shape3D * s);
 };
 
 #endif // BASICAPP_H

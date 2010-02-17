@@ -29,7 +29,7 @@ void RenderWidget0::initSceneEvent()
     // Camera
     camera = sceneManager->createCamera();
 
-    Shape3D cubeShape = createCube();
+    Shape3D * cubeShape = createSphere(1);
     cube = drawShape(cubeShape);
 
     // Trigger timer event every 5ms.
@@ -49,7 +49,7 @@ void RenderWidget0::timerEvent(QTimerEvent *t)
 {
     Matrix4 m(cos(0.01),-sin(0.01),0,0, sin(0.01),cos(0.01),0,0, 0,0,1,0, 0,0,0,1);
     Matrix4 m2(1,0,0,0, 0,cos(0.01), -sin(0.01),0, 0,sin(0.01),cos(0.01),0, 0,0,0,1);
-    sphere->setTransformation(m2*m*sphere->getTransformation());
+    cube->setTransformation(m2*m*cube->getTransformation());
     updateScene();
 }
 
@@ -82,7 +82,7 @@ void RenderWidget0::stopAnimation()
     }
 }
 
-&Shape3D RenderWidget0::createSphere(int depth)
+Shape3D * RenderWidget0::createSphere(int depth)
 {
     int nVerts = 24;
     float vertices[] = {
@@ -121,7 +121,7 @@ void RenderWidget0::stopAnimation()
     return new Shape3D(nVerts, vertices, colors, indices);
 }
 
-&Shape3D RenderWidget0::createCube()
+Shape3D *  RenderWidget0::createCube()
 {
     // A cube
     int nVerts = 8;
@@ -142,12 +142,11 @@ void RenderWidget0::stopAnimation()
     return new Shape3D(nVerts, vertices, colors, indices);
 }
 
-Object& drawShape(Shape3D s)
+Object * RenderWidget0::drawShape(Shape3D * s)
 {
-    new Object temp;
-    temp = sceneManager->createObject();
+    Object * temp = sceneManager->createObject();
     // Set up the vertex data
-    VertexData& vertexData = o->vertexData;
+    VertexData& vertexData = temp->vertexData;
 
     // Specify the elements of the vertex data:
     // - one element for vertex positions
@@ -159,14 +158,14 @@ Object& drawShape(Shape3D s)
 
     // Create the buffers and load the data
     vertexData.createVertexBuffer(
-        0, nVerts*3*sizeof(float), (unsigned char*)s.getVertices());
+        0, s->getNumVerts()*3*sizeof(float), (unsigned char*)s->getVertices());
 
     vertexData.createVertexBuffer(
-        1, nVerts*3*sizeof(float), (unsigned char*)s.getColors());
-    float[] indices (s.getIndices());
+        1, s->getNumVerts()*3*sizeof(float), (unsigned char*)s->getColors());
+    int * indices (s->getIndices());
 
     vertexData.createIndexBuffer(sizeof indices / sizeof indices[0],
-                                 indices());
+                                 indices);
 
-    return &temp;
+    return temp;
 }
