@@ -159,74 +159,15 @@ Shape3D * RenderWidget0::createCube()
 
 Shape3D * RenderWidget0::createSphere(int depth)
 {
-    int v_elem_num = pow(2, 2*depth + 3);
-    float v[v_elem_num];
-    
-    Vector3 vTop(0, 1, 0);          //top vertex
-    Vector3 vFrontLeft(-1, 0, 1);   //front left vertex
-    Vector3 vFrontRight(1, 0, 1);   //front right vertex
-    Vector3 vBackRight(1, 0, -1);   //back right vertex
-    Vector3 vBackLeft(-1, 0, -1);   //back left vertex
-    Vector3 vBottom(0, -1, 0);      //bottom vertex
-    
-    if (depth not equal zero) {
-      v = v + subdivide(vFrontLeft, vFrontRight, vTop, depth);
-      v = v + subdivide(vBackLeft, vFrontLeft, vTop, depth);
-      v = v + subdivide(vBackRight, vBackLeft, vTop, depth);
-      v = v + subdivide(vFrontRight, vBackRight, vTop, depth);
-      v = v + subdivide(vFrontLeft, vBottom, vFrontRight, depth);
-      v = v + subdivide(vBackLeft, vBottom, vFrontLeft, depth);
-      v = v + subdivide(vBackRight, vBottom, vBackLeft, depth);
-      v = v + subdivide(vFrontRight, vBottom, vBackRight, depth);
-    }
+    float * v = subdivideVertices();
 
-
-    
-    
-
-
-
-    float v[] = {
-        -1,0, 1,  1,0,1,  0,1,0,       //top front face
-        -1,0,-1, -1,0,1, 0,1,0,    //top left face
-        1,0,-1, -1,0,-1, 0,1,0,    //top back face
-        1,0,1, 1,0,-1, 0,1,0,      //top right face
-        -1,0,1, 0,-1,0, 1,0,1,     //bottom front face
-        -1,0,-1, 0,-1,0, -1,0,1,    //bottom left face
-        1,0,-1, 0,-1,0, -1,0,-1,    //bottom back face
-        1,0,1, 0,-1,0, 1,0,-1      //bottom right face
-    };
-    int v_elem_num = sizeof(v)/sizeof(v[0]);
-    float * vertices = new float[v_elem_num + 1];
-    vertices[0] = v_elem_num;
-    memmove(vertices + sizeof(float), v, sizeof(v));
-
-    float c[] = {
-        1,0,0, 1,0,0, 1,0,0,
-        0,1,0, 0,1,0, 0,1,0,
-        1,0,0, 1,0,0, 1,0,0,
-        0,1,0, 0,1,0, 0,1,0,
-        0,0,1, 0,0,1, 0,0,1,
-        1,0,1, 1,0,1, 1,0,1,
-        0,0,1, 0,0,1, 0,0,1,
-        1,0,1, 1,0,1, 1,0,1
-    };
+    c = subdivideColor();
     int c_elem_num = sizeof(c)/sizeof(c[0]);
     float * colors = new float[c_elem_num + 1];
     colors[0] = c_elem_num;
     memmove(colors + sizeof(float), c, sizeof(c));
 
-    // The index data that stores the connectivity of the triangles
-    int i[] = {
-        0,1,2,		// top front face
-        3,4,5,		// top left face
-        6,7,8,         // top back face
-        9,10,11,       // top right face
-        12,13,14,	// bottom front face
-        15,16,17,	// bottom left face
-        18,19,20,       // bottom back face
-        21,22,23     // bottom right face
-    };
+    i = subdivideIndices();
     int i_elem_num = sizeof(i)/sizeof(i[0]);
     int * indices= new int[i_elem_num + 1];
     indices[0] = i_elem_num;
@@ -265,12 +206,55 @@ Object * RenderWidget0::drawShape(Shape3D * s)
     return temp;
 }
 
-float[] RenderWidget0::subdivide(Vector3 v1, Vector3 v2, Vector3 v3, int depth)
+float * subdivideColors(int depth)
 {
-    float v[4];
+    ;
+}
+float * subdivideVertices(int depth)
+{
+    //new float [] v;
+    int v_elem_num = pow(2, 2*depth + 3);
 
-    if (depth == 0) {
-      return; 
+    Vector3 vTop(0, 1, 0);          //top vertex
+    Vector3 vFrontLeft(-1, 0, 1);   //front left vertex
+    Vector3 vFrontRight(1, 0, 1);   //front right vertex
+    Vector3 vBackRight(1, 0, -1);   //back right vertex
+    Vector3 vBackLeft(-1, 0, -1);   //back left vertex
+    Vector3 vBottom(0, -1, 0);      //bottom vertex
+
+    v1 = subdivide(vFrontLeft, vFrontRight, vTop, depth, v);
+    v2 = subdivide(vBackLeft, vFrontLeft, vTop, depth, v);
+    v3 = subdivide(vBackRight, vBackLeft, vTop, depth, v);
+    v4 = subdivide(vFrontRight, vBackRight, vTop, depth, v);
+    v5 = subdivide(vFrontLeft, vBottom, vFrontRight, depth, v);
+    v6 = subdivide(vBackLeft, vBottom, vFrontLeft, depth, v);
+    v7 = subdivide(vBackRight, vBottom, vBackLeft, depth, v);
+    v8 = subdivide(vFrontRight, vBottom, vBackRight, depth, v);
+
+    // float * vertices = new float[v_elem_num + 1];
+    // vertices[0] = v_elem_num;
+    // memmove(vertices + sizeof(float), v, sizeof(v));
+
+    new float[] final = numElements, v1, ..., v8;
+}
+
+float [] RenderWidget0::subdivide(Vector3 v1, Vector3 v2, Vector3 v3,
+                              int depth)
+{
+    if (depth == 0)
+    {
+        new float * baseArray;
+        baseArray[0] = v1.getX();
+        baseArray[1] = v1.getY();
+        baseArray[2] = v1.getZ();
+        baseArray[3] =  v2.getX();
+            v2.getY(),
+            v2.getZ(),
+            v3.getX(),
+            v3.getY(),
+            v3.getZ()
+        }
+      return baseArray;
     }
 
     Vector3 v12 = (v1 + v2)*0.5;
@@ -282,11 +266,15 @@ float[] RenderWidget0::subdivide(Vector3 v1, Vector3 v2, Vector3 v3, int depth)
     Vector3 v31 = (v3 + v1)*0.5;
     float v31Mag = v31->magnitude();
     v31->normalize(v31Mag);
-    
-    subdivide();
-    
-    
-    
-		    
+
+    int newDepth = depth - 1;
+    float []m1 = subdivide(v1, v12, v31, newDepth, v);
+    float []m2 = subdivide(v2, v23, v12, newDepth, v);
+    float []m3 = subdivide(v3, v31, v23, newDepth, v);
+    float []m4 = subdivide(v12, v23, v31, newDepth, v);
+
+    float [] sum =  m1 + m2 + m3 + m4;
+
+    return sum;
 
 }

@@ -53,6 +53,10 @@ private:
     Shape3D * createSphere(int depth);
     Shape3D * createCube();
     Object  * drawShape(Shape3D * s);
+    float[] subdivideVertices(int depth);
+    float[] subdivideColor(int depth);
+    float[] subidivideIndices(in depth);
+    float[] subdivide(Vector3 v1, Vector3 v2, Vector3 v3, int depth, float* v);
 };
 
 #endif // BASICAPP_H
