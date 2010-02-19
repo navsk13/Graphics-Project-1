@@ -54,11 +54,11 @@ private:
 	Shape3D * createSphere(int depth);
 	Shape3D * createCube();
 	Object  * drawShape(Shape3D * s);
-        float * subdivideVertices(int depth);
-        float * subdivideColor(int depth);
-        int * subdivideIndices(int depth); 
-        float * subdivideVertices(Vector3 v1, Vector3 v2, Vector3 v3, int depth);
-        float * subdivideColor(Vector3 c, int depth);
+    float * subdivideVertices(int depth);
+    float * subdivideColor(int depth);
+    int * subdivideIndices(int depth);
+    float * subdivideVertices(Vector3 v1, Vector3 v2, Vector3 v3, int depth);
+    float * subdivideColor(Vector3 c, int depth);
 };
 
 #endif // BASICAPP_H

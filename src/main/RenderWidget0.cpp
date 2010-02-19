@@ -19,8 +19,8 @@ RenderWidget0::~RenderWidget0()
     if(sceneManager)
     {
         delete sceneManager;
-        delete cubeShape;
-        delete sphereShape;
+        // delete cubeShape;
+        // delete sphereShape;
     }
 }
 
@@ -33,7 +33,7 @@ void RenderWidget0::initSceneEvent()
 
     cubeShape = createCube();
     blade1 = drawShape(cubeShape);
-    blade2 = drawShape(cubeShape);//maybe works
+    //blade2 = drawShape(cubeShape);//maybe works
 
     Matrix4 translateLeft(
         1, 0, 0, 2,
@@ -43,7 +43,7 @@ void RenderWidget0::initSceneEvent()
         );
     blade1->setTransformation(translateLeft);
 
-    sphereShape = createSphere(1);
+    sphereShape = createSphere(0);
     sphere = drawShape(sphereShape);
 
     // Trigger timer event every 5ms.
@@ -222,12 +222,13 @@ float * RenderWidget0:: subdivideVertices(int depth)
     float * m7 = subdivideVertices(vBackRight, vBottom, vBackLeft, depth);
     float * m8 = subdivideVertices(vFrontRight, vBottom, vBackRight, depth);
 
-    float * final = new float;
     int numSubdivisions = 8;
 
-    //update numElements, all 4 are the same so only look up 1
+    //update numElements, all are the same so only look up 1
     int subElements = m1[0];
-    final[0] = subElements*numSubdivisions;
+    int numVertices = subElements*numSubdivisions;
+    float * final = new float[numVertices + 1];
+    final[0] = numVertices;
 
     int sf = sizeof(float);
     int arraySize = sf*subElements;
@@ -242,14 +243,14 @@ float * RenderWidget0:: subdivideVertices(int depth)
     memmove(final + sf + 6*arraySize, m7 + sf, arraySize);
     memmove(final + sf + 7*arraySize, m8 + sf, arraySize);
 
-    delete [] m1;
-    delete [] m2;
-    delete [] m3;
-    delete [] m4;
-    delete [] m5;
-    delete [] m6;
-    delete [] m7;
-    delete [] m8;
+    // delete [] m1;
+    // delete [] m2;
+    // delete [] m3;
+    // delete [] m4;
+    // delete [] m5;
+    // delete [] m6;
+    // delete [] m7;
+    // delete [] m8;
 
     return final;
 
@@ -263,7 +264,7 @@ float * RenderWidget0::subdivideVertices(Vector3 v1,
     if (depth == 0)
     {
         //create an array on heap so it's returnable
-        float * baseArray = new float;
+        float * baseArray = new float [10];
 
         //maintain the # of elements as first element
         baseArray[0] = 9;
@@ -297,12 +298,14 @@ float * RenderWidget0::subdivideVertices(Vector3 v1,
     float * m3 = subdivideVertices(v3, v31, v23, newDepth);
     float * m4 = subdivideVertices(v12, v23, v31, newDepth);
 
-    float* sum = new float;
+
     int numSubdivisions = 4;
 
     //update numElements, all 4 are the same so only look up 1
     int subElements = m1[0];
-    sum[0] = subElements*numSubdivisions;
+    int numVertices = subElements*numSubdivisions;
+    float* sum = new float [numVertices + 1];
+    sum[0] = numVertices;
 
     int sf = sizeof(float);
     int arraySize = sf*subElements;
@@ -313,10 +316,10 @@ float * RenderWidget0::subdivideVertices(Vector3 v1,
     memmove(sum + sf + 2*arraySize, m3 + sf, arraySize);
     memmove(sum + sf + 3*arraySize, m4 + sf, arraySize);
 
-    delete [] m1;
-    delete [] m2;
-    delete [] m3;
-    delete [] m4;
+    // delete [] m1;
+    // delete [] m2;
+    // delete [] m3;
+    // delete [] m4;
 
     return sum;
 
@@ -339,12 +342,13 @@ float * RenderWidget0::subdivideColor(int depth)
     float * m7 = subdivideColor(bottomColor1, depth);
     float * m8 = subdivideColor(bottomColor2, depth);
 
-    float * final = new float;
     int numSubdivisions = 8;
 
     //update numElements, all 4 are the same so only look up 1
     int subElements = m1[0];
-    final[0] = subElements*numSubdivisions;
+    int numVertices = subElements*numSubdivisions;
+    float* final = new float [numVertices + 1];
+    final[0] = numVertices;
 
     int sf = sizeof(float);
     int arraySize = sf*subElements;
@@ -359,14 +363,14 @@ float * RenderWidget0::subdivideColor(int depth)
     memmove(final + sf + 6*arraySize, m7 + sf, arraySize);
     memmove(final + sf + 7*arraySize, m8 + sf, arraySize);
 
-    delete [] m1;
-    delete [] m2;
-    delete [] m3;
-    delete [] m4;
-    delete [] m5;
-    delete [] m6;
-    delete [] m7;
-    delete [] m8;
+    // delete [] m1;
+    // delete [] m2;
+    // delete [] m3;
+    // delete [] m4;
+    // delete [] m5;
+    // delete [] m6;
+    // delete [] m7;
+    // delete [] m8;
 
     return final;
 }
@@ -376,9 +380,10 @@ float * RenderWidget0::subdivideColor(Vector3 c,
 {
     if (depth == 0)
     {
-      float * baseArray = new float;
-        for (int i = 0; i < 3; i++) {
-	    baseArray[0] = 9;
+      float * baseArray = new float [10];
+        for (int i = 0; i < 3; i++)
+        {
+            baseArray[0] = 9;
             //counting
             baseArray[3*i+1] = c.getX();
             baseArray[3*i+2] = c.getY();
@@ -399,12 +404,13 @@ float * RenderWidget0::subdivideColor(Vector3 c,
     Vector3 newC(newR, newG, newB);
     float * m4 = subdivideColor(newC, newDepth);
 
-    float* sum = new float;
     int numSubdivisions = 4;
 
     //update numElements, all 4 are the same so only look up 1
     int subElements = m1[0];
-    sum[0] = subElements*numSubdivisions;
+    int numVertices = subElements*numSubdivisions;
+    float* sum = new float [numVertices + 1];
+    sum[0] = numVertices;
 
     int sf = sizeof(float);
     int arraySize = sf*subElements;
@@ -415,10 +421,10 @@ float * RenderWidget0::subdivideColor(Vector3 c,
     memmove(sum + sf + 2*arraySize, m3 + sf, arraySize);
     memmove(sum + sf + 3*arraySize, m4 + sf, arraySize);
 
-    delete [] m1;
-    delete [] m2;
-    delete [] m3;
-    delete [] m4;
+    // delete [] m1;
+    // delete [] m2;
+    // delete [] m3;
+    // delete [] m4;
 
     return sum;
 
@@ -428,10 +434,12 @@ float * RenderWidget0::subdivideColor(Vector3 c,
 int * RenderWidget0::subdivideIndices(int depth)
 {
     int i_elem_num = 3*pow(2, 2*depth + 3);
-    int indices[i_elem_num + 1] ;
+    int * indices = new int [i_elem_num + 1] ;
+    cout << "indices address: " << indices << endl;
+    cout << "elem num =" << i_elem_num << endl;
     indices[0] = i_elem_num;
-    for (int i = 1; i < i_elem_num; i++) {
-        indices[i-1];
+    for (int i = 1; i < i_elem_num+1; i++) {
+        indices[i] = i - 1;
     }
     return indices;
 }
