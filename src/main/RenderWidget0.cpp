@@ -200,7 +200,7 @@ Object * RenderWidget0::drawShape(Shape3D * s)
         1, c[0]*sizeof(c[0]), (unsigned char*)(c+sizeof(float)));
 
     int * indices (s->getIndices());
-    vertexData.createIndexBuffer(indices[0], (indices+sizeof(int)));
+    vertexData.createIndexBuffer(indices[0], (indices+1));
 
     return temp;
 }
@@ -445,6 +445,7 @@ int * RenderWidget0::subdivideIndices(int depth)
     cout << "indices address: " << indices << endl;
     cout << "elem num =" << i_elem_num << endl;
     indices[0] = i_elem_num;
+
     for (int i = 1; i < i_elem_num+1; i++)
     {
         indices[i] = i - 1;
