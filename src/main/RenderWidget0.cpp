@@ -20,6 +20,7 @@ RenderWidget0::~RenderWidget0()
     {
         delete sceneManager;
         delete cubeShape;
+        delete sphereShape;
     }
 }
 
@@ -31,14 +32,16 @@ void RenderWidget0::initSceneEvent()
     camera = sceneManager->createCamera();
 
     cubeShape = createCube();
-    cube = drawShape(cubeShape);
+    blade1 = drawShape(cubeShape);
+    blade2 = drawShape(cubeShape);//maybe works
+
     Matrix4 translateLeft(
         1, 0, 0, 2,
         0, 1, 0, 0,
         0, 0, 1, 2,
         0, 0, 0, 1
         );
-    cube->setTransformation(translateLeft);
+    blade1->setTransformation(translateLeft);
 
     sphereShape = createSphere(1);
     sphere = drawShape(sphereShape);
@@ -70,7 +73,7 @@ void RenderWidget0::timerEvent(QTimerEvent *t)
         0, sin(0.01), cos(0.01), 0,
         0, 0, 0, 1
         );
-    cube->setTransformation(m2*m*cube->getTransformation());
+    blade1->setTransformation(m2*m*blade1->getTransformation());
     sphere->setTransformation(m2*m*sphere->getTransformation());
     updateScene();
 }
@@ -159,27 +162,20 @@ Shape3D * RenderWidget0::createCube()
 
 Shape3D * RenderWidget0::createSphere(int depth)
 {
-    float * v = subdivideVertices();
+    float * vertices = subdivideVertices(depth);
 
-    c = subdivideColor();
-    int c_elem_num = sizeof(c)/sizeof(c[0]);
-    float * colors = new float[c_elem_num + 1];
-    colors[0] = c_elem_num;
-    memmove(colors + sizeof(float), c, sizeof(c));
+    float * colors = subdivideColor();
 
-    i = subdivideIndices();
-    int i_elem_num = sizeof(i)/sizeof(i[0]);
-    int * indices= new int[i_elem_num + 1];
-    indices[0] = i_elem_num;
-    memmove(indices + sizeof(int), i, sizeof(i));
+    int * indices = subdivideIndices();
 
-    int nVerts = 24;
+    int nVerts = pow(2, 2*depth + 3);
     return (new Shape3D(nVerts, vertices, colors, indices));
 }
 
 Object * RenderWidget0::drawShape(Shape3D * s)
 {
     Object * temp = sceneManager->createObject();
+
     // Set up the vertex data
     VertexData& vertexData = temp->vertexData;
 
@@ -187,11 +183,13 @@ Object * RenderWidget0::drawShape(Shape3D * s)
     // - one element for vertex positions
     vertexData.vertexDeclaration.addElement(
         0, 0, 3, 3*sizeof(float), RE330::VES_POSITION);
+
     // - one element for vertex colors
     vertexData.vertexDeclaration.addElement(
         1, 0, 3, 3*sizeof(int), RE330::VES_DIFFUSE);
 
     float * v = s->getVertices();
+
     // Create the buffers and load the data
     vertexData.createVertexBuffer(
         0, v[0]*sizeof(s[0]), (unsigned char*)(v+sizeof(float)));
@@ -201,20 +199,13 @@ Object * RenderWidget0::drawShape(Shape3D * s)
         1, c[0]*sizeof(c[0]), (unsigned char*)(c+sizeof(float)));
 
     int * indices (s->getIndices());
-        vertexData.createIndexBuffer(indices[0], (indices+sizeof(int)));
+    vertexData.createIndexBuffer(indices[0], (indices+sizeof(int)));
 
     return temp;
 }
 
-float * subdivideColors(int depth)
+float * RenderWidget0:: subdivideVertices(int depth)
 {
-    ;
-}
-float * subdivideVertices(int depth)
-{
-    //new float [] v;
-    int v_elem_num = pow(2, 2*depth + 3);
-
     Vector3 vTop(0, 1, 0);          //top vertex
     Vector3 vFrontLeft(-1, 0, 1);   //front left vertex
     Vector3 vFrontRight(1, 0, 1);   //front right vertex
@@ -222,59 +213,171 @@ float * subdivideVertices(int depth)
     Vector3 vBackLeft(-1, 0, -1);   //back left vertex
     Vector3 vBottom(0, -1, 0);      //bottom vertex
 
-    v1 = subdivide(vFrontLeft, vFrontRight, vTop, depth, v);
-    v2 = subdivide(vBackLeft, vFrontLeft, vTop, depth, v);
-    v3 = subdivide(vBackRight, vBackLeft, vTop, depth, v);
-    v4 = subdivide(vFrontRight, vBackRight, vTop, depth, v);
-    v5 = subdivide(vFrontLeft, vBottom, vFrontRight, depth, v);
-    v6 = subdivide(vBackLeft, vBottom, vFrontLeft, depth, v);
-    v7 = subdivide(vBackRight, vBottom, vBackLeft, depth, v);
-    v8 = subdivide(vFrontRight, vBottom, vBackRight, depth, v);
+    float * m1 = subdivideVertices(vFrontLeft, vFrontRight, vTop, depth);
+    float * m2 = subdivideVertices(vBackLeft, vFrontLeft, vTop, depth);
+    float * m3 = subdivideVertices(vBackRight, vBackLeft, vTop, depth);
+    float * m4 = subdivideVertices(vFrontRight, vBackRight, vTop, depth);
+    float * m5 = subdivideVertices(vFrontLeft, vBottom, vFrontRight, depth);
+    float * m6 = subdivideVertices(vBackLeft, vBottom, vFrontLeft, depth);
+    float * m7 = subdivideVertices(vBackRight, vBottom, vBackLeft, depth);
+    float * m8 = subdivideVertices(vFrontRight, vBottom, vBackRight, depth);
 
-    // float * vertices = new float[v_elem_num + 1];
-    // vertices[0] = v_elem_num;
-    // memmove(vertices + sizeof(float), v, sizeof(v));
+    float * final = new float;
+    int numSubdivisions = 8;
 
-    new float[] final = numElements, v1, ..., v8;
+    //update numElements, all 4 are the same so only look up 1
+    int subElements = m1[0];
+    final[0] = subElements*numSubdivisions;
+
+    int sf = sizeof(float);
+    int arraySize = sf*subElements;
+
+    //copy the first array into sum starting after the first element for both
+    memmove(final + sf, m1 + sf, arraySize);
+    memmove(final + sf + arraySize, m2 + sf, arraySize);
+    memmove(final + sf + 2*arraySize, m3 + sf, arraySize);
+    memmove(final + sf + 3*arraySize, m4 + sf, arraySize);
+    memmove(final + sf + 4*arraySize, m5 + sf, arraySize);
+    memmove(final + sf + 5*arraySize, m6 + sf, arraySize);
+    memmove(final + sf + 6*arraySize, m7 + sf, arraySize);
+    memmove(final + sf + 7*arraySize, m8 + sf, arraySize);
+
+    delete [] m1;
+    delete [] m2;
+    delete [] m3;
+    delete [] m4;
+    delete [] m5;
+    delete [] m6;
+    delete [] m7;
+    delete [] m8;
+
+    return final;
+
 }
 
-float [] RenderWidget0::subdivide(Vector3 v1, Vector3 v2, Vector3 v3,
-                              int depth)
+float * RenderWidget0::subdivideVertices(Vector3 v1,
+                                         Vector3 v2,
+                                         Vector3 v3,
+                                         int depth)
+{
+    if (depth == 0)
+    {
+        //create an array on heap so it's returnable
+        float * baseArray = new float;
+
+        //maintain the # of elements as first element
+        baseArray[0] = 9;
+
+        baseArray[1] = v1.getX();
+        baseArray[2] = v1.getY();
+        baseArray[3] = v1.getZ();
+        baseArray[4] = v2.getX();
+        baseArray[5] = v2.getY();
+        baseArray[6] = v2.getZ();
+        baseArray[7] = v3.getX();
+        baseArray[8] = v3.getY();
+        baseArray[9] = v3.getZ();
+
+        return baseArray;
+    }
+
+    Vector3 v12 = (v1 + v2)*0.5;
+    float v12Mag = v12.magnitude();
+    v12.normalize(v12Mag);
+    Vector3 v23 = (v2 + v3)*0.5;
+    float v23Mag = v23.magnitude();
+    v23.normalize(v23Mag);
+    Vector3 v31 = (v3 + v1)*0.5;
+    float v31Mag = v31.magnitude();
+    v31.normalize(v31Mag);
+
+    int newDepth = depth - 1;
+    float * m1 = subdivideVertices(v1, v12, v31, newDepth);
+    float * m2 = subdivideVertices(v2, v23, v12, newDepth);
+    float * m3 = subdivideVertices(v3, v31, v23, newDepth);
+    float * m4 = subdivideVertices(v12, v23, v31, newDepth);
+
+    float* sum = new float;
+    int numSubdivisions = 4;
+
+    //update numElements, all 4 are the same so only look up 1
+    int subElements = m1[0];
+    sum[0] = subElements*numSubdivisions;
+
+    int sf = sizeof(float);
+    int arraySize = sf*subElements;
+
+    //copy the first array into sum starting after the first element for both
+    memmove(sum + sf, m1 + sf, arraySize );
+    memmove(sum + sf + arraySize, m2 + sf, arraySize);
+    memmove(sum + sf + 2*arraySize, m3 + sf, arraySize);
+    memmove(sum + sf + 3*arraySize, m4 + sf, arraySize);
+
+    delete [] m1;
+    delete [] m2;
+    delete [] m3;
+    delete [] m4;
+
+    return sum;
+
+}
+
+float * RenderWidget0::subdivideColors(int depth)
+{
+
+    Vector3 topColor1(1, 0, 0);       //top front and back color- red
+    Vector3 topColor2(1, 1, 0);       //top right and left color- yellow
+    Vector3 bottomColor1(0, 0, 1);    //bottom front and back color- blue
+    Vector3 bottomColor2(0, 1, 0);    //bottom right and left color- green
+
+
+    v1 = subdivideC(topColor1, depth);
+    v2 = subdivideC(topColor2, depth);
+    v3 = subdivideC(topColor1, depth);
+    v4 = subdivideC(topColor2, depth);
+    v5 = subdivideC(bottomColor1, depth);
+    v6 = subdivideC(bottomColor2, depth);
+    v7 = subdivideC(bottomColor1, depth);
+    v8 = subdivideC(bottomColor2, depth);
+
+    sum up;
+}
+
+float[] RenderWidget0::subdivideC(Vector3 c,
+                                  int depth)
 {
     if (depth == 0)
     {
         new float * baseArray;
-        baseArray[0] = v1.getX();
-        baseArray[1] = v1.getY();
-        baseArray[2] = v1.getZ();
-        baseArray[3] =  v2.getX();
-            v2.getY(),
-            v2.getZ(),
-            v3.getX(),
-            v3.getY(),
-            v3.getZ()
+        for (i = 0; i < 3; i++) {
+            //counting
+            baseArray[3*i+1] = c.getX();
+            baseArray[3*i+2] = c.getY();
+            baseArray[3*i+3] = c.getZ();
         }
-      return baseArray;
+        return baseArray;
     }
 
-    Vector3 v12 = (v1 + v2)*0.5;
-    float v12Mag = v12->magnitude();
-    v12->normalize(v12Mag);
-    Vector3 v23 = (v2 + v3)*0.5;
-    float v23Mag = v23->magnitude();
-    v23->normalize(v23Mag);
-    Vector3 v31 = (v3 + v1)*0.5;
-    float v31Mag = v31->magnitude();
-    v31->normalize(v31Mag);
+    subdivideC(c, depth - 1);
+    subdivideC(c, depth - 1);
+    subdivideC(c, depth - 1);
+    float newR = c.getX() + (1 - c.getX())*0.5;
+    float newG = c.getY() + (1 - c.getY())*0.5;
+    float newB = c.getZ() + (1 - c.getZ())*0.5;
+    Vector3 newC(newR, newG, newB);
+    subdivideC(newC, depth - 1);
 
-    int newDepth = depth - 1;
-    float []m1 = subdivide(v1, v12, v31, newDepth, v);
-    float []m2 = subdivide(v2, v23, v12, newDepth, v);
-    float []m3 = subdivide(v3, v31, v23, newDepth, v);
-    float []m4 = subdivide(v12, v23, v31, newDepth, v);
+    sum;
 
-    float [] sum =  m1 + m2 + m3 + m4;
+}
 
-    return sum;
-
+float * RenderWidget0::subdivideIndices(int depth)
+{
+    int i_elem_num = 3*pow(2, 2*depth + 3);
+    float indices[i_elem_num + 1] ;
+    indices[0] = i_elem_num;
+    for (i = 1; i < i_elem_num; i++) {
+        indices[i-1];
+    }
+    return indices;
 }
