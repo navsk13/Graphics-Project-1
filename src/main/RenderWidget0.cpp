@@ -74,7 +74,7 @@ void RenderWidget0::timerEvent(QTimerEvent *t)
         0, 0, 0, 1
         );
     blade1->setTransformation(m2*m*blade1->getTransformation());
-    sphere->setTransformation(m2*m*sphere->getTransformation());
+//    sphere->setTransformation(m*m2*sphere->getTransformation());
     updateScene();
 }
 
@@ -220,6 +220,19 @@ float * RenderWidget0:: subdivideVertices(int depth)
     Vector3 vBackLeft(-1, 0, -1);   //back left vertex
     Vector3 vBottom(0, -1, 0);      //bottom vertex
 
+    float vTopMag = vTop.magnitude();
+    vTop.normalize(vTopMag);
+    float vFrontLeftMag = vFrontLeft.magnitude();
+    vFrontLeft.normalize(vFrontLeftMag);
+    float vFrontRightMag = vFrontRight.magnitude();
+    vFrontRight.normalize(vFrontRightMag);
+    float vBackRightMag = vBackRight.magnitude();
+    vBackRight.normalize(vBackRightMag);
+    float vBackLeftMag = vBackLeft.magnitude();
+    vBackLeft.normalize(vBackLeftMag);
+    float vBottomMag = vBottom.magnitude();
+    vBottom.normalize(vBottomMag);
+
     float * m1 = subdivideVertices(vFrontLeft, vFrontRight, vTop, depth);
     float * m2 = subdivideVertices(vBackLeft, vFrontLeft, vTop, depth);
     float * m3 = subdivideVertices(vBackRight, vBackLeft, vTop, depth);
@@ -250,7 +263,6 @@ float * RenderWidget0:: subdivideVertices(int depth)
         final[i+5*subElements] = m6[i];
         final[i+6*subElements] = m7[i];
         final[i+7*subElements] = m8[i];
-        //cout << final[i] << " ," << endl;
     }
 
     delete m1;
@@ -373,7 +385,6 @@ float * RenderWidget0::subdivideColor(int depth)
         final[i+6*subElements] = m7[i];
         final[i+7*subElements] = m8[i];
     }
-    cout << "numVertices =" << numVertices << endl;
     delete m1;
     delete m2;
     delete m3;
