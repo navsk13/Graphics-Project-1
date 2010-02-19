@@ -164,9 +164,9 @@ Shape3D * RenderWidget0::createSphere(int depth)
 {
     float * vertices = subdivideVertices(depth);
 
-    float * colors = subdivideColor();
+    float * colors = subdivideColor(depth);
 
-    int * indices = subdivideIndices();
+    int * indices = subdivideIndices(depth);
 
     int nVerts = pow(2, 2*depth + 3);
     return (new Shape3D(nVerts, vertices, colors, indices));
@@ -322,7 +322,7 @@ float * RenderWidget0::subdivideVertices(Vector3 v1,
 
 }
 
-float * RenderWidget0::subdivideColors(int depth)
+float * RenderWidget0::subdivideColor(int depth)
 {
 
     Vector3 topColor1(1, 0, 0);       //top front and back color- red
@@ -330,26 +330,55 @@ float * RenderWidget0::subdivideColors(int depth)
     Vector3 bottomColor1(0, 0, 1);    //bottom front and back color- blue
     Vector3 bottomColor2(0, 1, 0);    //bottom right and left color- green
 
+    float * m1 = subdivideColor(topColor1, depth);
+    float * m2 = subdivideColor(topColor2, depth);
+    float * m3 = subdivideColor(topColor1, depth);
+    float * m4 = subdivideColor(topColor2, depth);
+    float * m5 = subdivideColor(bottomColor1, depth);
+    float * m6 = subdivideColor(bottomColor2, depth);
+    float * m7 = subdivideColor(bottomColor1, depth);
+    float * m8 = subdivideColor(bottomColor2, depth);
 
-    v1 = subdivideC(topColor1, depth);
-    v2 = subdivideC(topColor2, depth);
-    v3 = subdivideC(topColor1, depth);
-    v4 = subdivideC(topColor2, depth);
-    v5 = subdivideC(bottomColor1, depth);
-    v6 = subdivideC(bottomColor2, depth);
-    v7 = subdivideC(bottomColor1, depth);
-    v8 = subdivideC(bottomColor2, depth);
+    float * final = new float;
+    int numSubdivisions = 8;
 
-    sum up;
+    //update numElements, all 4 are the same so only look up 1
+    int subElements = m1[0];
+    final[0] = subElements*numSubdivisions;
+
+    int sf = sizeof(float);
+    int arraySize = sf*subElements;
+
+    //copy the first array into sum starting after the first element for both
+    memmove(final + sf, m1 + sf, arraySize);
+    memmove(final + sf + arraySize, m2 + sf, arraySize);
+    memmove(final + sf + 2*arraySize, m3 + sf, arraySize);
+    memmove(final + sf + 3*arraySize, m4 + sf, arraySize);
+    memmove(final + sf + 4*arraySize, m5 + sf, arraySize);
+    memmove(final + sf + 5*arraySize, m6 + sf, arraySize);
+    memmove(final + sf + 6*arraySize, m7 + sf, arraySize);
+    memmove(final + sf + 7*arraySize, m8 + sf, arraySize);
+
+    delete [] m1;
+    delete [] m2;
+    delete [] m3;
+    delete [] m4;
+    delete [] m5;
+    delete [] m6;
+    delete [] m7;
+    delete [] m8;
+
+    return final;
 }
 
-float[] RenderWidget0::subdivideC(Vector3 c,
-                                  int depth)
+float * RenderWidget0::subdivideColor(Vector3 c,
+				      int depth)
 {
     if (depth == 0)
     {
-        new float * baseArray;
-        for (i = 0; i < 3; i++) {
+      float * baseArray = new float;
+        for (int i = 0; i < 3; i++) {
+	    baseArray[0] = 9;
             //counting
             baseArray[3*i+1] = c.getX();
             baseArray[3*i+2] = c.getY();
@@ -358,25 +387,50 @@ float[] RenderWidget0::subdivideC(Vector3 c,
         return baseArray;
     }
 
-    subdivideC(c, depth - 1);
-    subdivideC(c, depth - 1);
-    subdivideC(c, depth - 1);
+    int newDepth = depth - 1;
+
+    float * m1 =  subdivideColor(c, newDepth);
+    float * m2 = subdivideColor(c, newDepth);
+    float * m3 = subdivideColor(c, newDepth);
+
     float newR = c.getX() + (1 - c.getX())*0.5;
     float newG = c.getY() + (1 - c.getY())*0.5;
     float newB = c.getZ() + (1 - c.getZ())*0.5;
     Vector3 newC(newR, newG, newB);
-    subdivideC(newC, depth - 1);
+    float * m4 = subdivideColor(newC, newDepth);
 
-    sum;
+    float* sum = new float;
+    int numSubdivisions = 4;
+
+    //update numElements, all 4 are the same so only look up 1
+    int subElements = m1[0];
+    sum[0] = subElements*numSubdivisions;
+
+    int sf = sizeof(float);
+    int arraySize = sf*subElements;
+
+    //copy the first array into sum starting after the first element for both
+    memmove(sum + sf, m1 + sf, arraySize );
+    memmove(sum + sf + arraySize, m2 + sf, arraySize);
+    memmove(sum + sf + 2*arraySize, m3 + sf, arraySize);
+    memmove(sum + sf + 3*arraySize, m4 + sf, arraySize);
+
+    delete [] m1;
+    delete [] m2;
+    delete [] m3;
+    delete [] m4;
+
+    return sum;
+
 
 }
 
-float * RenderWidget0::subdivideIndices(int depth)
+int * RenderWidget0::subdivideIndices(int depth)
 {
     int i_elem_num = 3*pow(2, 2*depth + 3);
-    float indices[i_elem_num + 1] ;
+    int indices[i_elem_num + 1] ;
     indices[0] = i_elem_num;
-    for (i = 1; i < i_elem_num; i++) {
+    for (int i = 1; i < i_elem_num; i++) {
         indices[i-1];
     }
     return indices;

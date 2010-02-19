@@ -46,18 +46,19 @@ private:
 	Camera *camera;
 	Object *blade1;
 	Object *blade2;
-    Shape3D *cubeShape;
-    Object * sphere;
-    Shape3D * sphereShape;
+	Shape3D *cubeShape;
+	Object * sphere;
+	Shape3D * sphereShape;
 	int timerId;
 
-    Shape3D * createSphere(int depth);
-    Shape3D * createCube();
-    Object  * drawShape(Shape3D * s);
-    float * subdivideVertices(int depth);
-    //float[] subdivideColor(int depth);
-    //float[] subdivideIndices(in depth);
-    float * subdivideVertices(Vector3 v1, Vector3 v2, Vector3 v3, int depth);
+	Shape3D * createSphere(int depth);
+	Shape3D * createCube();
+	Object  * drawShape(Shape3D * s);
+        float * subdivideVertices(int depth);
+        float * subdivideColor(int depth);
+        int * subdivideIndices(int depth); 
+        float * subdivideVertices(Vector3 v1, Vector3 v2, Vector3 v3, int depth);
+        float * subdivideColor(Vector3 c, int depth);
 };
 
 #endif // BASICAPP_H
