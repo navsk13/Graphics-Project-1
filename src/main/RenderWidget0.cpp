@@ -159,6 +159,33 @@ Shape3D * RenderWidget0::createCube()
 
 Shape3D * RenderWidget0::createSphere(int depth)
 {
+    int v_elem_num = pow(2, 2*depth + 3);
+    float v[v_elem_num];
+    
+    Vector3 vTop(0, 1, 0);          //top vertex
+    Vector3 vFrontLeft(-1, 0, 1);   //front left vertex
+    Vector3 vFrontRight(1, 0, 1);   //front right vertex
+    Vector3 vBackRight(1, 0, -1);   //back right vertex
+    Vector3 vBackLeft(-1, 0, -1);   //back left vertex
+    Vector3 vBottom(0, -1, 0);      //bottom vertex
+    
+    if (depth not equal zero) {
+      v = v + subdivide(vFrontLeft, vFrontRight, vTop, depth);
+      v = v + subdivide(vBackLeft, vFrontLeft, vTop, depth);
+      v = v + subdivide(vBackRight, vBackLeft, vTop, depth);
+      v = v + subdivide(vFrontRight, vBackRight, vTop, depth);
+      v = v + subdivide(vFrontLeft, vBottom, vFrontRight, depth);
+      v = v + subdivide(vBackLeft, vBottom, vFrontLeft, depth);
+      v = v + subdivide(vBackRight, vBottom, vBackLeft, depth);
+      v = v + subdivide(vFrontRight, vBottom, vBackRight, depth);
+    }
+
+
+    
+    
+
+
+
     float v[] = {
         -1,0, 1,  1,0,1,  0,1,0,       //top front face
         -1,0,-1, -1,0,1, 0,1,0,    //top left face
@@ -236,4 +263,30 @@ Object * RenderWidget0::drawShape(Shape3D * s)
         vertexData.createIndexBuffer(indices[0], (indices+sizeof(int)));
 
     return temp;
+}
+
+float[] RenderWidget0::subdivide(Vector3 v1, Vector3 v2, Vector3 v3, int depth)
+{
+    float v[4];
+
+    if (depth == 0) {
+      return; 
+    }
+
+    Vector3 v12 = (v1 + v2)*0.5;
+    float v12Mag = v12->magnitude();
+    v12->normalize(v12Mag);
+    Vector3 v23 = (v2 + v3)*0.5;
+    float v23Mag = v23->magnitude();
+    v23->normalize(v23Mag);
+    Vector3 v31 = (v3 + v1)*0.5;
+    float v31Mag = v31->magnitude();
+    v31->normalize(v31Mag);
+    
+    subdivide();
+    
+    
+    
+		    
+
 }
