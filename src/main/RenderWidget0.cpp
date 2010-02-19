@@ -43,7 +43,7 @@ void RenderWidget0::initSceneEvent()
         );
     blade1->setTransformation(translateLeft);
 
-    sphereShape = createSphere(1);
+    sphereShape = createSphere(3);
     sphere = drawShape(sphereShape);
 
     // Trigger timer event every 5ms.
@@ -113,7 +113,7 @@ Shape3D * RenderWidget0::createCube()
     int nVerts = 8;
 
     //initializes a local array with desired vertices
-    float v [] = {
+    float v [] = { 0, //dummy value
         -1,-1,1, 1,-1,1, 1,1,1, -1,1,1,
         -1,1,-1, 1,1,-1, 1,-1,-1, -1,-1,-1
     };
@@ -127,22 +127,25 @@ Shape3D * RenderWidget0::createCube()
     //set the first element of the array to the number of elements
     vertices[0] = v_elem_num;
 
-    //copies local array values to heap array
-    memmove(vertices + sizeof(float), v, sizeof(v));
-
-
     //puts colors array on heap
-    float c [] = {
+    float c [] = {0,
         1,0,0, 0,1,0, 0,0,1, 1,1,0,
         0,1,1, 1,0,1, 1,1,1, 0.5,0.5,0.5
     };
     int c_elem_num = nVerts*3;
     float * colors = new float[c_elem_num + 1];
     colors[0] = c_elem_num;
-    memmove(colors + sizeof(float), c, sizeof(c));
+
+    //copies local array values to heap array
+    for (int i = 1; i < v_elem_num + 1; i++)
+    {
+        vertices[i] = v[i];
+        colors[i] = c[i];
+    }
+
 
     // The index data that stores the connectivity of the triangles
-    int i[] = {
+    int i[] = {0,
         0,2,3, 0,1,2,    // front face
         7,3,4, 7,0,3,    // left face
         6,4,5, 6,7,4,    // back face
@@ -155,7 +158,10 @@ Shape3D * RenderWidget0::createCube()
     indices[0] = i_elem_num;
 
     //not dependent on nVerts so we have to find using sizeof
-    memmove(indices + sizeof(int), i, sizeof(i));
+    for (int elem = 1; elem < i_elem_num; elem ++)
+    {
+        indices[elem] = i[elem];
+    }
 
     return (new Shape3D(nVerts, vertices, colors, indices));
 }
@@ -193,14 +199,14 @@ Object * RenderWidget0::drawShape(Shape3D * s)
 
     // Create the buffers and load the data
     vertexData.createVertexBuffer(
-        0, v[0]*sizeof(s[0]), (unsigned char*)(v+sizeof(float)));
+        0, v[0]*sizeof(s[1]), (unsigned char*)(&v[1]));
 
     float * c = s->getColors();
     vertexData.createVertexBuffer(
-        1, c[0]*sizeof(c[0]), (unsigned char*)(c+sizeof(float)));
+        1, c[0]*sizeof(c[1]), (unsigned char*)(&c[1]));
 
     int * indices (s->getIndices());
-    vertexData.createIndexBuffer(indices[0], (indices+1));
+    vertexData.createIndexBuffer(indices[0], (&indices[1]));
 
     return temp;
 }
@@ -442,17 +448,11 @@ int * RenderWidget0::subdivideIndices(int depth)
     int i_elem_num = 3*pow(2, 2*depth + 3);
     int * indices = new int [i_elem_num + 1] ;
 
-    cout << "indices address: " << indices << endl;
-    cout << "elem num =" << i_elem_num << endl;
     indices[0] = i_elem_num;
 
     for (int i = 1; i < i_elem_num+1; i++)
     {
         indices[i] = i - 1;
-    }
-    for (int i = 0; i < i_elem_num+1; i++)
-    {
-         cout << indices[i] << " ," << endl;
     }
 
     return indices;
