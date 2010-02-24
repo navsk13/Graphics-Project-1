@@ -202,7 +202,7 @@ namespace RE330
             return r;
         }
 
-        inline Matrix4 rotateAxis(char axis,
+        inline static Matrix4 rotateAxis(char axis,
                                   float angle)
         {
             Matrix4 result(IDENTITY);
@@ -239,7 +239,7 @@ namespace RE330
             return result;
         }
 
-        inline Matrix4 rotateArbitrary(Vector4 vector,
+        inline static Matrix4 rotateArbitrary(Vector4 vector,
                                        float angle)
         {
             Matrix4 result(IDENTITY);
@@ -269,7 +269,7 @@ namespace RE330
             return result;
         }
 
-        inline Matrix4 scale(float x,
+        inline static Matrix4 scale(float x,
                              float y,
                              float z)
         {
@@ -282,7 +282,7 @@ namespace RE330
             return result;
         }
 
-        inline Matrix4 translate(float x,
+        inline static Matrix4 translate(float x,
                                  float y,
                                  float z)
         {

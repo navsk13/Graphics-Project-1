@@ -44,11 +44,17 @@ protected:
 private:
 	SceneManager *sceneManager;
 	Camera *camera;
-	Object *blade1;
-	Object *blade2;
-	Shape3D *cubeShape;
-	Object * sphere;
-	Shape3D * sphereShape;
+	//objects
+	Object * helicopterBody;
+	Shape3D * sphereShape1;
+	Object * helicopterBlade1;
+	Shape3D * cubeShape1;
+	Object * helicopterBlade2;
+	Shape3D * cubeShape2;
+	//	Shape3D *cubeShape;
+	//	Object * sphere;
+	//	Shape3D * sphereShape;
+
 	int timerId;
 
 	Shape3D * createSphere(int depth);

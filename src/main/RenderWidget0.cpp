@@ -19,8 +19,8 @@ RenderWidget0::~RenderWidget0()
     if(sceneManager)
     {
         delete sceneManager;
-        // delete cubeShape;
-        // delete sphereShape;
+	delete sphereShape1;
+	//        delete cubeShape;
     }
 }
 
@@ -31,20 +31,44 @@ void RenderWidget0::initSceneEvent()
     // Camera
     camera = sceneManager->createCamera();
 
-    cubeShape = createCube();
-    blade1 = drawShape(cubeShape);
-    //blade2 = drawShape(cubeShape);//maybe works
-
-    Matrix4 translateLeft(
-        1, 0, 0, 2,
+    //cubeShape = createCube();
+    sphereShape1 = createSphere(1);
+    helicopterBody = drawShape(sphereShape1);
+    cubeShape1 = createCube();
+    helicopterBlade1 = drawShape(cubeShape1);
+    cubeShape2 = createCube();
+    helicopterBlade2 = drawShape(cubeShape2);
+    Matrix4 translateLeft1(
+        1, 0, 0, 3,
         0, 1, 0, 0,
-        0, 0, 1, 2,
+        0, 0, 1, 0,
         0, 0, 0, 1
         );
-    blade1->setTransformation(translateLeft);
 
-    sphereShape = createSphere(3);
-    sphere = drawShape(sphereShape);
+    Matrix4 translateLeft2 (
+        1.5, 0, 0, 3,
+        0, 0.1, 0, 1.1,
+        0, 0, 0.1, 0,
+        0, 0, 0, 1
+        );
+
+    Matrix4 rotate1(
+	cos(3.14/2), 0, sin(3.14/2), 0,
+        0, 1 , 0, 0,
+	-sin(3.14/2), 0, cos(3.14/2), 0,
+        0, 0, 0, 1
+        );
+    Matrix4 startPosBody = Matrix4::translate(3, 0, 0);
+    helicopterBody->setTransformation(translateLeft1);
+
+    Matrix4 startPosBlade1 = Matrix4::translate(3, 1.1, 0);
+    Matrix4 blade1Scale = Matrix4::scale(1.5, 0.1, 0.1);
+    helicopterBlade1->setTransformation(startPosBlade1*blade1Scale);
+
+
+    Matrix4 startPosBlade2 = Matrix4::translate(3, -1.1, 0);
+    Matrix4 blade2Scale = Matrix4::scale(1.5, 0.1, 0.1);
+    helicopterBlade2->setTransformation(startPosBlade2*blade2Scale);
 
     // Trigger timer event every 5ms.
     timerId = startTimer(5);
@@ -61,20 +85,32 @@ void RenderWidget0::resizeRenderWidgetEvent(const QSize &s)
 
 void RenderWidget0::timerEvent(QTimerEvent *t)
 {
-    Matrix4 m(
-        cos(0.01), -sin(0.01), 0, 0,
-        sin(0.01), cos(0.01), 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1
-        );
-    Matrix4 m2(
-        1, 0, 0, 0,
-        0, cos(0.01), -sin(0.01), 0,
-        0, sin(0.01), cos(0.01), 0,
-        0, 0, 0, 1
-        );
-    blade1->setTransformation(m2*m*blade1->getTransformation());
-//    sphere->setTransformation(m*m2*sphere->getTransformation());
+
+    Matrix4 blade1Current = helicopterBlade1->getTransformation();
+    float * blade1Array = blade1Current.getElementPointer();
+    Matrix4 in1 = Matrix4::translate(-blade1Array[3],
+                                     -blade1Array[7],
+                                     -blade1Array[11]);
+    Matrix4 rot1 = Matrix4::rotateAxis('y', .02);
+    Matrix4 out1 = Matrix4::translate(blade1Array[3],
+                                      blade1Array[7],
+                                      blade1Array[11]);
+
+    Matrix4 blade2Current = helicopterBlade2->getTransformation();
+    float * blade2Array = blade2Current.getElementPointer();
+    Matrix4 in2 = Matrix4::translate(-blade2Array[3],
+                                     -blade2Array[7],
+                                     -blade2Array[11]);
+    Matrix4 rot2 = Matrix4::rotateAxis('y', -.02);
+    Matrix4 out2 = Matrix4::translate(blade2Array[3],
+                                      blade2Array[7],
+                                      blade2Array[11]);
+
+    Matrix4 rotAll = Matrix4::rotateAxis('y', .01);
+
+    helicopterBody->setTransformation(rotAll*helicopterBody->getTransformation());
+    helicopterBlade1->setTransformation(rotAll*out1*rot1*in1*blade1Current);
+    helicopterBlade2->setTransformation(rotAll*out2*rot2*in2*blade2Current);
     updateScene();
 }
 
